@@ -17,12 +17,6 @@ public class Users {
     }
 
     public static User findById(String id) {
-        if(id != null) {
-            User user = userHashMap.get(id);
-            if(user != null) {
-                return user;
-            }
-        }
-        return null;
+        return userHashMap.getOrDefault(id, null);
     }
 }
