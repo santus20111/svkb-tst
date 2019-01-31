@@ -16,15 +16,13 @@ public class Users {
         userHashMap.put(user.getId(), user);
     }
 
-    public static Optional<User> findById(String id) {
-        Optional<User> optionalUser = Optional.empty();
-
+    public static User findById(String id) {
         if(id != null) {
             User user = userHashMap.get(id);
             if(user != null) {
-                optionalUser = Optional.of(user);
+                return user;
             }
         }
-        return optionalUser;
+        return null;
     }
 }

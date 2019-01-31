@@ -17,4 +17,8 @@ public class UserResponse {
         this.bonuses = bonuses;
 
     }
+
+    public UserResponse() {
+
+    }
 }

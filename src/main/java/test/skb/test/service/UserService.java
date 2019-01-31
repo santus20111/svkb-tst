@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 import test.skb.test.models.User;
 
 public interface UserService {
-    User findById(String userId);
-    Mono<Integer> getUserBonuses(User user);
+    Mono<User> findById(String userId);
+    Mono<Integer> getUserBonuses(String userId);
 }

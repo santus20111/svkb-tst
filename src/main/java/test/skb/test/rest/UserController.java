@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import test.skb.test.models.User;
@@ -21,12 +22,12 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     private Mono<UserResponse> getClient(@PathVariable("id") String id) {
-        User user = userService.findById(id);
 
-        if(user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        return userService.getUserBonuses(user).map(bonuses -> new UserResponse(user, bonuses));
+        return userService
+                .findById(id)
+                .zipWith(userService.getUserBonuses(id), UserResponse::new)
+                .doOnError(error -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
     }
 }
