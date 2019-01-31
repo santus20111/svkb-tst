@@ -1,6 +1,7 @@
 package test.skb.test.service;
 
 import lombok.Data;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,8 @@ public class UserServiceImpl implements UserService {
     @Value("${bonsuses_service_base_url}")
     private String bonusServiceBaseUrl;
 
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Override
     public Mono<User> findById(String userId) {
         User user = Users.findById(userId);
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public Mono<Integer> getUserBonuses(String id) {
         WebClient.RequestBodyUriSpec requestBodySpecUriSpec = WebClient.create(bonusServiceBaseUrl + "/v1/bonuses/" + id).method(HttpMethod.GET);
         return requestBodySpecUriSpec.retrieve().bodyToMono(BonusesResponse.class).map(BonusesResponse::getAmount).onErrorResume(error -> {
-            LoggerFactory.getLogger(UserServiceImpl.class).error(error.getMessage());
+            logger.error(error.getMessage());
             return Mono.just(0);
         });
     }
